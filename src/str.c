@@ -11,12 +11,7 @@ bool str_replace(char string nonnull_ptr, size_t string_size, const char from no
 	char* swap = malloc((size_t)(end - string));
 
 	char* next = string;
-	while ((next = strchr(next, from[0])) != NULL) {
-		if (strncmp(from, next, from_len) != 0) {
-			next++;
-			continue;
-		}
-
+	while ((next = strstr(next, from)) != NULL) {
 		if ((size_t)(end - string) + to_len > string_size) {
 			free(swap);
 			return false;
