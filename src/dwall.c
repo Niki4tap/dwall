@@ -27,8 +27,8 @@ const char* const json_template = "\
 
 #define STR_SIZE 8 * 1024
 
-char* make_announcement(const char message nonnull_ptr, bool is_short);
-char* read_stdin();
+static char* make_announcement(const char message nonnull_ptr, bool is_short);
+static char* read_stdin();
 
 int main(int argc, char* argv[]) {
 	(void)argc;
@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
 	return 0;
 }
 
-char* make_announcement(const char message nonnull_ptr, bool is_short) {
+static char* make_announcement(const char message nonnull_ptr, bool is_short) {
 	char* s = malloc(STR_SIZE);
 
 	char* hostname = malloc(STR_SIZE);
@@ -173,7 +173,7 @@ char* make_announcement(const char message nonnull_ptr, bool is_short) {
 	return s;
 }
 
-char* read_stdin() {
+static char* read_stdin() {
 	char* original = malloc(STR_SIZE);
 	char* s = original;
 	while (scanf("%79s", s) != EOF) {
