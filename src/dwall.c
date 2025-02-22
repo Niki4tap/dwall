@@ -35,7 +35,8 @@ int main(int argc, char* argv[]) {
 	args_t args = parse_args(argv);
 
 	if (args.unknown_argument != NULL) {
-		fprintf(stderr, "Unknown argument: %s", args.unknown_argument);
+		fprintf(stderr, "Unknown argument: %s\n", args.unknown_argument);
+		print_help(*argv);
 		return -1;
 	}
 
