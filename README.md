@@ -15,7 +15,7 @@ Build: `nix build`
 ### Usage
 
 ```
-Usage: result/bin/dwall [options] [<message>]
+Usage: result/bin/dwall [options] -w <webhooks> [<message>]
 
 Write a message to discord.
 

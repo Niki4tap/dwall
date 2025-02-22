@@ -67,7 +67,7 @@ args_t parse_args(char* argv[]) {
 
 void print_help(const char name nonnull_ptr) {
 	printf("\
-Usage: %s [options] [<message>]\n\
+Usage: %s [options] -w <webhooks> [<message>]\n\
 \n\
 Write a message to discord.\n\
 \n\
