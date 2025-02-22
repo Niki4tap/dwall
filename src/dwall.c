@@ -90,6 +90,10 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	if (args.webhooks == NULL) {
+		fprintf(stderr, "No webhooks provided, nothing to be done, have you forgotten to supply the `--webhooks` option?");
+		return -1;
+	}
 	char* url = strtok(args.webhooks, ",");
 	while (url != NULL) {
 		res = curl_easy_setopt(curl, CURLOPT_URL, url);
