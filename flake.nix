@@ -19,7 +19,7 @@
 				};
 			in pkgs.stdenv.mkDerivation {
 				name = "dwall";
-				version = "0.1.0";
+				version = "0.1.1";
 
 				nativeBuildInputs = [ pkgs.pkgsStatic.curl.dev ];
 
