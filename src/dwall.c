@@ -59,11 +59,35 @@ int main(int argc, char* argv[]) {
 
 	char* s = args.message ?: read_stdin();
 	char* announcement = make_announcement(s, args.is_short);
+	if (announcement == NULL) {
+		return -1;
+	}
 	if (args.message == NULL) { free(s); }
-	str_replace(announcement, STR_SIZE, "\"", "\\\"");
-	str_replace(announcement, STR_SIZE, "\n", "\\n");
+
+	size_t len = strlen(announcement);
+	if (len > 2000) {
+		fprintf(stderr, "warning: The message looks too long (expected max 2000 characters, got %zu), the string sanitization might fail, or most likely the discord endpoint will reject the message.", len);
+	}
+
+	bool ok = false;
+	ok = str_replace(announcement, STR_SIZE, "\"", "\\\"");
+	if (!ok) {
+		fputs("Exceeded memory while sanitizing the message, check your message length", stderr);
+		return -1;
+	}
+	ok = str_replace(announcement, STR_SIZE, "\n", "\\n");
+	if (!ok) {
+		fputs("Exceeded memory while sanitizing the message, check your message length", stderr);
+		return -1;
+	}
+
 	char* json = malloc(STR_SIZE);
-	snprintf(json, STR_SIZE, json_template, announcement);
+
+	int sz = snprintf(json, STR_SIZE, json_template, announcement);
+	if (sz < 0) {
+		fputs("Error formatting the message (message might be too long?)", stderr);
+		return -1;
+	}
 
 	CURL* curl = curl_easy_init();
 	if (!curl) {
@@ -130,11 +154,18 @@ char* make_announcement(const char message nonnull_ptr, bool is_short) {
 	time_t t = time(NULL);
 	strftime(time_str, STR_SIZE, "%c", localtime(&t));
 
+	int sz;
 	if (!is_short) {
-		snprintf(s, STR_SIZE, message_template, getlogin(), hostname, ttyname(STDIN_FILENO), time_str, message);
+		sz = snprintf(s, STR_SIZE, message_template, getlogin(), hostname, ttyname(STDIN_FILENO), time_str, message);
 	} else {
-		snprintf(s, STR_SIZE, short_message_template, message);
+		sz = snprintf(s, STR_SIZE, short_message_template, message);
 	}
+
+	if (sz < 0) {
+		fputs("Error formatting the message (message might be too long?)", stderr);
+		return NULL;
+	}
+
 
 	free(time_str);
 	free(hostname);
