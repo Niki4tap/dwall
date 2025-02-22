@@ -90,11 +90,9 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
-	char* eater = args.webhooks;
-	while (eater != NULL) {
-		auto ptrs = split_one(eater, ',');
-		eater = ptrs.next;
-		res = curl_easy_setopt(curl, CURLOPT_URL, ptrs.element);
+	char* url = strtok(args.webhooks, ",");
+	while (url != NULL) {
+		res = curl_easy_setopt(curl, CURLOPT_URL, url);
 		if (res != CURLE_OK) {
 			fprintf(stderr, "Couldn't set curl option: %s", curl_easy_strerror(res));
 			return -1;
@@ -105,6 +103,8 @@ int main(int argc, char* argv[]) {
 			fprintf(stderr, "Error performing curl request: %s", curl_easy_strerror(res));
 			return -1;
 		}
+
+		url = strtok(NULL, ",");
 	}
 
 	curl_slist_free_all(headers);

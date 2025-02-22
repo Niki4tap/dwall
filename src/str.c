@@ -32,14 +32,3 @@ bool str_replace(char string nonnull_ptr, size_t string_size, const char from no
 	free(swap);
 	return true;
 }
-
-struct { char* element; char* next; } split_one(char string nonnull_ptr, char delim) {
-	#define ret_ty typeof(split_one((char*)1, 0))
-	char* p = strchr(string, (int)delim);
-	if (p == NULL) {
-		return (ret_ty){ string, NULL };
-	}
-	*p = '\0';
-	return (ret_ty){ string, ++p };
-	#undef ret_ty
-}
