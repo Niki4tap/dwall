@@ -42,12 +42,12 @@ int main(int argc, char* argv[]) {
 
 	if (args.display_help) {
 		print_help(*argv);
-		return -1;
+		return 0;
 	}
 
 	if (args.display_version) {
 		print_version();
-		return -1;
+		return 0;
 	}
 
 	CURLcode res;
