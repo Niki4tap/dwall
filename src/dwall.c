@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	CURLcode res;
 	res = curl_global_init(CURL_GLOBAL_ALL);
 	if (res != CURLE_OK) {
-		fprintf(stderr, "Couldn't initialize curl: %s", curl_easy_strerror(res));
+		fprintf(stderr, "Couldn't initialize curl: %s\n", curl_easy_strerror(res));
 		return -1;
 	}
 
@@ -66,18 +66,18 @@ int main(int argc, char* argv[]) {
 
 	size_t len = strlen(announcement);
 	if (len > 2000) {
-		fprintf(stderr, "warning: The message looks too long (expected max 2000 characters, got %zu), the string sanitization might fail, or most likely the discord endpoint will reject the message.", len);
+		fprintf(stderr, "warning: The message looks too long (expected max 2000 characters, got %zu), the string sanitization might fail, or most likely the discord endpoint will reject the message.\n", len);
 	}
 
 	bool ok = false;
 	ok = str_replace(announcement, STR_SIZE, "\"", "\\\"");
 	if (!ok) {
-		fputs("Exceeded memory while sanitizing the message, check your message length", stderr);
+		fputs("Exceeded memory while sanitizing the message, check your message length\n", stderr);
 		return -1;
 	}
 	ok = str_replace(announcement, STR_SIZE, "\n", "\\n");
 	if (!ok) {
-		fputs("Exceeded memory while sanitizing the message, check your message length", stderr);
+		fputs("Exceeded memory while sanitizing the message, check your message length\n", stderr);
 		return -1;
 	}
 
@@ -85,25 +85,25 @@ int main(int argc, char* argv[]) {
 
 	int sz = snprintf(json, STR_SIZE, json_template, announcement);
 	if (sz < 0) {
-		fputs("Error formatting the message (message might be too long?)", stderr);
+		fputs("Error formatting the message (message might be too long?)\n", stderr);
 		return -1;
 	}
 
 	CURL* curl = curl_easy_init();
 	if (!curl) {
-		fputs("Couldn't make an instance of curl", stderr);
+		fputs("Couldn't make an instance of curl\n", stderr);
 		return -1;
 	}
 
 	res = curl_easy_setopt(curl, CURLOPT_VERBOSE, args.verbose);
 	if (res != CURLE_OK) {
-		fprintf(stderr, "Couldn't set curl option: %s", curl_easy_strerror(res));
+		fprintf(stderr, "Couldn't set curl option: %s\n", curl_easy_strerror(res));
 		return -1;
 	}
 
 	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json);
 	if (res != CURLE_OK) {
-		fprintf(stderr, "Couldn't set curl option: %s", curl_easy_strerror(res));
+		fprintf(stderr, "Couldn't set curl option: %s\n", curl_easy_strerror(res));
 		return -1;
 	}
 
@@ -111,25 +111,25 @@ int main(int argc, char* argv[]) {
 
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	if (res != CURLE_OK) {
-		fprintf(stderr, "Couldn't set curl option: %s", curl_easy_strerror(res));
+		fprintf(stderr, "Couldn't set curl option: %s\n", curl_easy_strerror(res));
 		return -1;
 	}
 
 	if (args.webhooks == NULL) {
-		fprintf(stderr, "No webhooks provided, nothing to be done, have you forgotten to supply the `--webhooks` option?");
+		fprintf(stderr, "No webhooks provided, nothing to be done, have you forgotten to supply the `--webhooks` option?\n");
 		return -1;
 	}
 	char* url = strtok(args.webhooks, ",");
 	while (url != NULL) {
 		res = curl_easy_setopt(curl, CURLOPT_URL, url);
 		if (res != CURLE_OK) {
-			fprintf(stderr, "Couldn't set curl option: %s", curl_easy_strerror(res));
+			fprintf(stderr, "Couldn't set curl option: %s\n", curl_easy_strerror(res));
 			return -1;
 		}
 
 		curl_easy_perform(curl);
 		if (res != CURLE_OK) {
-			fprintf(stderr, "Error performing curl request: %s", curl_easy_strerror(res));
+			fprintf(stderr, "Error performing curl request: %s\n", curl_easy_strerror(res));
 			return -1;
 		}
 
@@ -162,7 +162,7 @@ char* make_announcement(const char message nonnull_ptr, bool is_short) {
 	}
 
 	if (sz < 0) {
-		fputs("Error formatting the message (message might be too long?)", stderr);
+		fputs("Error formatting the message (message might be too long?)\n", stderr);
 		return NULL;
 	}
 
@@ -183,6 +183,7 @@ char* read_stdin() {
 		s++;
 		*s = '\0';
 	}
+	puts("");
 
 	return original;
 }
