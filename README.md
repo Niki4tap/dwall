@@ -5,7 +5,6 @@ Much like `wall`, or more closely related in functionality, `rwall`, `dwall` bro
 ### Building
 
 Dependencies:
-- `libcurl`
 - `nix`
 
 Build: `nix build`
